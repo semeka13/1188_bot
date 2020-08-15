@@ -41,15 +41,16 @@ def start(message):
                                            "Возможности бота:\n"
                                            "/refresh - команда для обновления базы компаний\n"
                                            "/search - поиск компаний по фильтрам (город, категория)\n"
-                                           "/view_cities - список городов\n"
                                            "/view_categories - список категорий\n")
 
 
 @bot.message_handler(commands=["refresh"])
 def refresh(message):
     bot.send_message(message.from_user.id, "Данные обновляются. Это может занять максимум 20 минут.")
-    #Обновление данных
-    bot.send_message(message.from_user.id, "Данные обновились. Воспользуйтесь функцией /search, чтобы скачать новую базу.")
+    # Обновление данных
+    bot.send_message(message.from_user.id,
+                     "Данные обновились. Воспользуйтесь функцией /search, чтобы скачать новую базу.")
+
 
 @bot.message_handler(commands=["view_categories"])
 def view_categories(message):
@@ -57,6 +58,14 @@ def view_categories(message):
     bot.send_message(message.from_user.id, text)
     file = open("categories.xlsx")
     bot.send_document(message.from_user.id, file)
+
+
+'''@bot.message_handler(commands=["view_cities"])
+def view_categories(message):
+    text = "Cписок всех городов"
+    bot.send_message(message.from_user.id, text)
+    file = open("cities.xlsx")
+    bot.send_document(message.from_user.id, file)'''
 
 
 @bot.message_handler(commands=["search"])
@@ -82,7 +91,8 @@ def filtered_data(message):
                     csvfile, quoting=csv.QUOTE_ALL)
                 writer = csv.writer(
                     file, quoting=csv.QUOTE_ALL)
-                writer.writerow(['title', 'address', 'city', 'phone', 'email', 'description', 'homepage', 'branch', 'products'])
+                writer.writerow(
+                    ['title', 'address', 'city', 'phone', 'email', 'description', 'homepage', 'branch', 'products'])
 
                 for row in reader:
                     if all(category in config.categories for category in categories):
